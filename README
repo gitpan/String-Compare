@@ -12,6 +12,10 @@ set of tests to give a more accurate pontuation of how much the  names are alike
 The result is in percentage. If the strings are exactly equal, it would return 1,
 if they have nothing in common, it would return 0.
 
+CHANGES
+
+0.2 - word_by_word tries all the words of the other string for each word to get the
+better result.
 
 INSTALATION
 
