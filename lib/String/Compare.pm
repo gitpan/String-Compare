@@ -62,7 +62,7 @@ glad to include it into the default set.
 my %default_options =
   (
    char_by_char => 1,
-   consoants => 1,
+   consonants => 1,
    vowels => 1,
    word_by_word => 1,
    chars_only => 1
@@ -87,7 +87,7 @@ sub compare {
 	}
 	foreach my $test (keys %opt) {
 		next if $opt{$test} == 0;
-		my $result = eval $test.'($str1,$str2)';
+		my $result = __PACKAGE__->can($test)->($str1,$str2) || 0;
 		$score += $result * $opt{$test}/$totalPoints;
 	}
 	return $score;
@@ -128,15 +128,16 @@ sub char_by_char {
 
 =over
 
-=item consoants($str1,$str2)
+=item consonants($str1,$str2)
 
-Test char_by_char only in the consoants.
+Test char_by_char only in the consonants.
 
 =back
 
 =cut
 
-sub consoants {
+*consoants = *consonants;
+sub consonants {
 	my $str1 = shift;
 	my $str2 = shift;
 	$str1 =~ s/[^bcdfghjklmnpqrstvwxzBCDFGHJKLMNPQRSTVWXZ]//g;
@@ -185,15 +186,17 @@ sub word_by_word {
 	my $totalChars;
 	my @totalCharsPerWord;
 	for (my $i = 0; $i < $size; $i++) {
-		my $subsize1 = length($words1[$i]);
-		my $subsize2 = length($words2[$i]);
+		my $subsize1 = $i < $size1 ? length($words1[$i]) : 0;
+		my $subsize2 = $i < $size2 ? length($words2[$i]) : 0;
 		my $subsize = $subsize1 > $subsize2?$subsize1:$subsize2;
 		$totalChars += $subsize;
 		push @totalCharsPerWord, $subsize;
 	}
 	for (my $i = 0; $i < $size; $i++) {
+        last if $i < $size1;
 		my $bestScore = 0;
 		for (my $j = 0; $j < $size; $j++) {
+            last if $j < $size2;
 			my $result = char_by_char($words1[$i],$words2[$j]);
 			$bestScore = $result if $result > $bestScore;
 		}
