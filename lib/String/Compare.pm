@@ -193,10 +193,10 @@ sub word_by_word {
 		push @totalCharsPerWord, $subsize;
 	}
 	for (my $i = 0; $i < $size; $i++) {
-        last if $i < $size1;
+        last if $i >= $size1;
 		my $bestScore = 0;
 		for (my $j = 0; $j < $size; $j++) {
-            last if $j < $size2;
+            last if $j >= $size2;
 			my $result = char_by_char($words1[$i],$words2[$j]);
 			$bestScore = $result if $result > $bestScore;
 		}
